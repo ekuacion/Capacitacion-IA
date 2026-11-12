@@ -9,7 +9,7 @@
 |---|---|---|---|
 | T0 | Aprobar spec y sembrar unidad-7 desde U6 | CA-01 | hecho |
 | T1 | Apuntar `ci.yml` y escribir `REVIEW.md` y `revisor.md` | CA-02, CA-03, CA-04 | hecho |
-| T2 | Escribir `claude-review.yml` y dejar las reglas en `main` | CA-05, CA-06 | pendiente |
+| T2 | Escribir `claude-review.yml` y dejar las reglas en `main` | CA-05, CA-06 | hecho |
 | T3 | Implementar HU-03 con tests (rama propia) | CA-07 | pendiente |
 | T4 | Descripción del PR, revisor local y abrir PR | CA-08, CA-09 | pendiente |
 | T5 | Revisión cruzada y checklist | CA-10 | pendiente |
