@@ -35,6 +35,6 @@ API REST en ASP.NET Core (.NET 10, Minimal API) con 45 pedidos de ejemplo en mem
 6. Antes de modificar un archivo, explica el cambio y espera aprobación.
 7. Nunca hagas commit, push ni merge: lo hace una persona después de leer el diff.
 8. No agregues paquetes NuGet sin preguntar. Aprobado: `Microsoft.AspNetCore.Mvc.Testing` (tests HTTP, HU-01).
-9. Solo trabajas en `src/`, `tests/`, `specs/` y `docs/`. `.claude/` (settings y subagentes) solo cuando una tarea de la spec lo pide.
+9. Solo trabajas en `src/`, `tests/`, `specs/` y `docs/`. `.claude/` (settings y subagentes) solo cuando una tarea de la spec lo pide. `.github/` y `REVIEW.md` solo cuando una tarea de TEC-06 lo pide.
 10. `legado/` (código Delphi + DBISAM) es **solo lectura**: se lee, se analiza y se cita (`archivo:línea`), pero nunca se edita, se mueve ni se borra.
 11. Si una regla de negocio no está escrita en la spec, pregunta; no la inventes. En el diagnóstico del legado, lo que no puedas verificar en el código se marca «por verificar».

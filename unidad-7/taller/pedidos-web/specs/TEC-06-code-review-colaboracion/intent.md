@@ -1,6 +1,6 @@
 # Intent: TEC-06 · Code review y colaboración
 
-> Autor: Claudio Ortiz Castillo (PO) · Fecha: 2026-11-12 · Estado: **borrador** (pendiente de aprobación)
+> Autor: Claudio Ortiz Castillo (PO) · Fecha: 2026-11-12 · Estado: **listo para spec** (aprobado, base `main`)
 
 > Formato: `specs/plantillas/intent-plantilla.md`. Trabajo técnico (prefijo `TEC`): el vendedor no ve ningún cambio, salvo la HU-03 como caso de práctica.
 > Es el taller de la Unidad 7: «Que cada cambio llegue a la rama base revisado con reglas escritas, por la IA y por una persona» (94 minutos).
@@ -32,8 +32,8 @@ El equipo de desarrollo y quien revisa PR. Punto de partida de la Unidad 8.
 - **Plazo:** 94 minutos (preparación 9, reglas 25, PR 25, revisión cruzada 20, reto 15).
 - **Sin paquetes NuGet nuevos** (regla 8). Sin instalar software (`gh` no está instalado: el PR se abre desde la web).
 - **Commit, push, PR y merge los hace Claudio.** Claude deja los cambios en stage y propone el mensaje.
-- Base de los PR: `develop` (decisión de Claudio). `main` se promueve aparte.
-- Repo privado `ekuacion/Capacitacion-IA` (la guía asume público). La etapa 3 en pareja necesita que la pareja tenga acceso al repo.
+- Base de los PR: `main` (decisión de Claudio, 2026-11-12; ya trae `develop` y `claude.yml`).
+- Repo privado `ekuacion/Capacitacion-IA` (la guía asume público). Sin pareja: la etapa 3 se hace sobre el PR propio.
 
 ## Cómo sabremos que funcionó
 

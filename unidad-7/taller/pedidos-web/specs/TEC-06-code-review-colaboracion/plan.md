@@ -1,16 +1,16 @@
 # Plan: TEC-06 · Code review y colaboración
 
 > Spec de origen: `specs/TEC-06-code-review-colaboracion/spec.md` v0.1 · Autor: Claude Code · Revisado por: Claudio Ortiz Castillo
-> Estado: propuesto
+> Estado: aprobado
 
 ## Enfoque
 
-Primero se siembra `unidad-7` desde U6 para tener una base en verde (CA-01). Luego se escriben las reglas (RN-01 a RN-03) y se integran a `develop` antes de abrir el PR (RN-04). La HU-03 (RN-07) se implementa en su propia rama con un test por criterio. El PR se abre a mano con la descripción completada por Claudio, y la revisión (IA y persona) deja evidencia en el checklist. La plantilla de PR (RN-08) y el registro de cierre terminan el taller.
+Primero se siembra `unidad-7` desde U6 para tener una base en verde (CA-01). Luego se escriben las reglas (RN-01 a RN-03) y se integran a `main` antes de abrir el PR (RN-04). La HU-03 (RN-07) se implementa en su propia rama con un test por criterio. El PR se abre a mano con la descripción completada por Claudio, y la revisión (IA y persona) deja evidencia en el checklist. La plantilla de PR (RN-08) y el registro de cierre terminan el taller.
 
 ## Decisiones técnicas
 
 - **Sembrar desde U6** y no trabajar en unidad-6: decisión de Claudio. Descartado: copiar la carpeta completa de U7 (deja 3 tests en rojo y sin el trabajo de U1 a U6).
-- **PR con base `develop`**, decisión de Claudio. Descartado: base `main` (sigue en `abc9635`, sin workflows).
+- **PR con base `main`**, decisión de Claudio (ya trae `develop` y `claude.yml`). Descartado: base `develop`.
 - **Revisor sin herramientas de escritura.** Descartado: `Bash` libre.
 - **`IReadOnlyList<Pedido>` en orden de entrada**, sin paquetes nuevos.
 - **Claude Code GitHub Actions** con versión fija, como en `claude.yml` (`claude-code-action v1.0.271`); se compara con la documentación antes de guardar.
@@ -36,8 +36,8 @@ Primero se siembra `unidad-7` desde U6 para tener una base en verde (CA-01). Lue
 | Riesgo | Mitigación |
 |---|---|
 | Secreto no creado o cuota agotada: el workflow no comenta | Claudio sigue los pasos de configuración; CA-09 queda como no cumplido si falla |
-| El workflow puede exigir estar en la rama por defecto | Verificar en la documentación; anotar si no corre antes de promover a `main` |
-| Repo privado: la pareja no ve el PR | Dar acceso o hacer la etapa 3 sobre tu PR y anotarlo |
+| `main` sin ruleset: la documentación recomienda proteger la rama base | Anotarlo; no se configura aquí |
+| Sin pareja: no hay revisión por otra persona | Etapa 3 sobre el PR propio; anotar como no verificada |
 | La siembra pisa archivos de U7 | Copiar con lista explícita; sin pisar `README.md`, HU-03, checklist ni `.agents/` |
 | El CI de unidad-6 deja de correr al cambiar `ci.yml` | Se acepta (decisión); queda registrado |
 | `.agents/` (PDFs del curso) sin versionar | No se agrega a stage |
@@ -53,4 +53,4 @@ Primero se siembra `unidad-7` desde U6 para tener una base en verde (CA-01). Lue
 
 ## Fuera del plan
 
-Lo mismo que «Fuera de alcance» de la spec: API de HU-03, pendientes de la U6, instalar software y promover a `main`.
+Lo mismo que «Fuera de alcance» de la spec: API de HU-03, pendientes de la U6, instalar software y configurar rulesets de `main`.

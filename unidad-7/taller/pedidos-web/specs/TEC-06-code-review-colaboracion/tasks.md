@@ -7,9 +7,9 @@
 
 | ID | Tarea | CA cubiertos | Estado |
 |---|---|---|---|
-| T0 | Aprobar spec y sembrar unidad-7 desde U6 | CA-01 | pendiente |
-| T1 | Apuntar `ci.yml` y escribir `REVIEW.md` y `revisor.md` | CA-02, CA-03, CA-04 | pendiente |
-| T2 | Escribir `claude-review.yml` y dejar las reglas en `develop` | CA-05, CA-06 | pendiente |
+| T0 | Aprobar spec y sembrar unidad-7 desde U6 | CA-01 | hecho |
+| T1 | Apuntar `ci.yml` y escribir `REVIEW.md` y `revisor.md` | CA-02, CA-03, CA-04 | hecho |
+| T2 | Escribir `claude-review.yml` y dejar las reglas en `main` | CA-05, CA-06 | pendiente |
 | T3 | Implementar HU-03 con tests (rama propia) | CA-07 | pendiente |
 | T4 | Descripción del PR, revisor local y abrir PR | CA-08, CA-09 | pendiente |
 | T5 | Revisión cruzada y checklist | CA-10 | pendiente |
@@ -42,7 +42,7 @@
 - **Verificación:** `grep -n "Edit\|Write" .claude/agents/revisor.md` → sin herramientas de escritura; reiniciar Claude Code y «Usa el subagente revisor sobre esta rama» → responde.
 - **Hecho cuando:** Claudio aprobó cada archivo antes de guardarlo.
 
-## T2 — `claude-review.yml` y reglas en `develop`
+## T2 — `claude-review.yml` y reglas en `main`
 
 - **CA cubiertos:** CA-05, CA-06
 - **Depende de:** T1
@@ -50,9 +50,9 @@
 - **Qué hacer:**
   - Escribir el workflow (opened/reopened/ready_for_review, permisos mínimos, timeout, versiones fijas, secreto por nombre) comparando con la documentación.
   - Pasos del secreto: los hace Claudio en Settings › Secrets and variables › Actions.
-  - Claudio integra la rama a `develop`.
+  - Claudio integra la rama a `main`.
 - **Verificación:** `grep -n "token\|TOKEN" .github/workflows/claude-review.yml` → solo el nombre del secreto; CI del merge en verde.
-- **Hecho cuando:** `REVIEW.md` y `claude-review.yml` están en `develop` con CI en verde.
+- **Hecho cuando:** `REVIEW.md` y `claude-review.yml` están en `main` con CI en verde.
 
 ## T3 — Implementar HU-03
 
@@ -60,7 +60,7 @@
 - **Depende de:** T2
 - **Archivos:** `unidad-7/.../src/PedidosWeb.Core/Pedidos/FiltroPedidos.cs`, `unidad-7/.../tests/PedidosWeb.Core.Tests/Pedidos/FiltroPedidosTests.cs`
 - **Qué hacer:**
-  - Rama `hu-03-pedidos-por-fecha` desde `develop` (nombre por confirmar).
+  - Rama `hu-03-pedidos-por-fecha` desde `main`.
   - Un test por criterio (HU-03/CA-01 a CA-04, nulo y orden de entrada).
 - **Verificación:** `dotnet test --filter "FullyQualifiedName~FiltroPedidosTests"` → todos en verde; `dotnet test` completo en verde.
 - **Hecho cuando:** los tests prueban ambas fechas límite y el caso `desde > hasta`.
@@ -84,7 +84,7 @@
 - **Archivos:** `unidad-7/.../docs/checklist-revision.md`
 - **Qué hacer:**
   - Leer los comentarios del PR y proponer respuesta; Claudio decide cada una con su argumento.
-  - Revisar el PR de la pareja (si hay) y registrar 1 hallazgo humano no estilístico.
+  - Sin pareja: revisar el propio PR como segunda lectura y registrar 1 hallazgo humano no estilístico.
   - Completar el checklist.
 - **Verificación:** cada hilo respondido; checklist sin marcadores `<…>`; CI en verde antes del merge.
 - **Hecho cuando:** Claudio hizo el merge.

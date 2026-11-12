@@ -2,8 +2,8 @@
 
 | Campo | Valor |
 |---|---|
-| Estado | borrador |
-| Versión | 0.1 |
+| Estado | aprobada |
+| Versión | 1.0 |
 | Fecha | 2026-11-12 |
 | Autor(es) | Claudio Ortiz Castillo (PO) con Claude Code |
 | Intent de origen | `specs/TEC-06-code-review-colaboracion/intent.md` |
@@ -23,7 +23,7 @@ Como integrante del equipo de desarrollo, quiero que cada PR se revise con regla
 - **RN-01:** `REVIEW.md` define qué es *Importante*, qué *no reportar* y un tope de detalles menores. Incluye **3 chequeos de «Revisar siempre»** (los propone Claude en T1; Claudio los aprueba).
 - **RN-02:** `.claude/agents/revisor.md` es de solo lectura (sin herramientas de escritura) y lee `AGENTS.md` y `REVIEW.md` desde la rama base.
 - **RN-03:** `claude-review.yml` corre en `opened`, `reopened` y `ready_for_review`, no en cada push; con permisos mínimos, timeout, versiones fijas y el token solo como secreto.
-- **RN-04:** `REVIEW.md` y `claude-review.yml` están en la rama base (`develop`) **antes** de abrir el PR de HU-03.
+- **RN-04:** `REVIEW.md` y `claude-review.yml` están en la rama base (`main`) **antes** de abrir el PR de HU-03.
 - **RN-05:** Cada hallazgo de la IA recibe «Acepto», «Discutir» o «Descarto» con argumento propio; el PR tiene al menos 1 hallazgo humano que no es de estilo.
 - **RN-06:** El merge se hace con el CI en verde.
 - **RN-07 (HU-03; decisión del PO, 2026-11-12):** `FiltroPedidos.EntreFechas(pedidos, desde, hasta)` en `src/PedidosWeb.Core/Pedidos/`; límites inclusivos; `desde > hasta` lanza `ArgumentException`; `pedidos` nulo lanza `ArgumentNullException`; devuelve `IReadOnlyList<Pedido>` en el orden recibido. (Nulo y orden no están en la spec de HU-03: los decidió el PO.)
@@ -47,7 +47,7 @@ Como integrante del equipo de desarrollo, quiero que cada PR se revise con regla
 - **Dado** `claude-review.yml`, **cuando** se revisa, **entonces** cumple RN-03 y una búsqueda no encuentra ningún valor de token (solo el nombre `CLAUDE_CODE_OAUTH_TOKEN`).
 
 **CA-06 — Reglas en la base antes del PR**
-- **Dado** el PR de HU-03, **cuando** se abre, **entonces** `REVIEW.md` y `claude-review.yml` ya están en `develop` y el CI sigue en verde.
+- **Dado** el PR de HU-03, **cuando** se abre, **entonces** `REVIEW.md` y `claude-review.yml` ya están en `main` y el CI sigue en verde.
 
 **CA-07 — HU-03 implementada con tests**
 - **Dado** `desde = 2026-03-01` y `hasta = 2026-03-31`, **cuando** se filtra, **entonces**: aparece el pedido del 03-01 (HU-03/CA-01), aparece el del 03-31 (HU-03/CA-02), no aparecen los del 02-28 ni 04-01 (HU-03/CA-03), `desde > hasta` lanza `ArgumentException` con mensaje claro (HU-03/CA-04), `pedidos` nulo lanza `ArgumentNullException` y se conserva el orden de entrada (RN-07). Un test por criterio y `dotnet test` en verde.
@@ -87,19 +87,25 @@ Como integrante del equipo de desarrollo, quiero que cada PR se revise con regla
 - Exponer HU-03 en la API; cambiar `IPedidoRepositorio` o los pedidos de ejemplo.
 - Pendientes de la U6: mutación de los 7 tests (CA-02), compuerta roja de `ci-local.ps1` (CA-05), falla con `@claude` (CA-07). Se anotan, no se ejecutan.
 - Instalar `gh` u otro software; paquetes NuGet nuevos.
-- Promover `develop` a `main` (lo decide Claudio aparte; `claude.yml` solo responde desde `main`).
+- Proteger la rama `main` con un ruleset (recomendado por la documentación; no se configura aquí).
 
 ## 8. Preguntas abiertas
 
-- **[Decidir] Ubicación de `REVIEW.md`:** raíz del repo o carpeta de `pedidos-web`. Por verificar en code.claude.com/docs/en/code-review-customize.
-- **[Decidir] `ci.yml`:** apuntarlo solo a unidad-7 (propuesta) o dejar ambas carpetas.
-- **[Decidir] Rama de HU-03:** `hu-03-pedidos-por-fecha` (la guía) o `feature/hu-03-pedidos-por-fecha` (tu flujo).
-- **[Decidir] Pareja:** repo de la pareja y acceso (el repo es privado). Sin pareja, la etapa 3 se hace sobre tu PR y se anota como no verificada la revisión por otra persona.
-- **[Decidir] Secreto:** ¿`CLAUDE_CODE_OAUTH_TOKEN` está creado en el repo? No se comprobó en la U6.
-- **[Decidir] Regla 9 de AGENTS.md:** `.github/` y `REVIEW.md` no están en «solo trabajas en…»; esta spec los autoriza solo para estas tareas.
+Resueltas el 2026-11-12 por el PO:
+
+- **Base de los PR:** `main` (ya trae `develop` y `claude.yml`).
+- **Ubicación de `REVIEW.md`:** carpeta `unidad-7/taller/pedidos-web`. La documentación lo pone en la raíz del repo, para el Code Review gestionado (Team/Enterprise); aquí el workflow y el revisor apuntan a esa ruta.
+- **`ci.yml`:** solo unidad-7 (unidad-6 deja de correr en CI).
+- **Rama de HU-03:** `hu-03-pedidos-por-fecha` (la de la guía).
+- **Pareja:** no hay. La etapa 3 se hace sobre el PR propio y la revisión por otra persona queda como **no verificada**.
+- **Secreto:** `CLAUDE_CODE_OAUTH_TOKEN` está creado según el PO; no verificado por Claude.
+- **Regla 9 de `AGENTS.md`:** ampliada para `.github/` y `REVIEW.md` solo en tareas de TEC-06.
+
+Abierta: ninguna.
 
 ## 9. Historial de cambios
 
 | Versión | Fecha | Cambio |
 |---|---|---|
 | 0.1 | 2026-11-12 | Borrador |
+| 1.0 | 2026-11-12 | Aprobada por el PO; base `main`, decisiones de la sección 8 cerradas |
