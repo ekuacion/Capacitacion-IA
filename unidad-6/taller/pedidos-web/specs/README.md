@@ -10,6 +10,7 @@ Una carpeta por historia de usuario, con su `spec.md` (y su `plan.md` cuando cor
 | `TEC-02-skill-documentar-modulo/` | U3 | Trabajo técnico: la Skill `documentar-modulo` y la documentación de `ClientesService`. |
 | `TEC-03-diagnostico-legado/` | U4 | Trabajo técnico: diagnóstico de Pedidos Legado (inventario, dependencias, reglas, riesgos y matriz de decisión), sin tocar el legado. |
 | `TEC-04-migrar-calculo-totales/` | U5 | Trabajo técnico: migrar `UCalculoTotales.pas` a C# con un golden master de 60 casos, corregir R05 y planificar la migración. |
+| `TEC-05-calidad-pruebas-ci/` | U6 | Trabajo técnico: corregir H1, tests de borde que sí prueban, CI en GitHub y en Docker local, y una falla diagnosticada con `@claude`. |
 
 Las carpetas `HU-` son historias de usuario (comportamiento nuevo). Las `TEC-` son trabajo técnico que no cambia lo que
 el usuario ve, como un refactor; su spec es el comportamiento que debe quedar idéntico.

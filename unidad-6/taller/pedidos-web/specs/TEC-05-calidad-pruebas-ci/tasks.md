@@ -1,12 +1,12 @@
 # Tasks: TEC-05 · Calidad, pruebas y CI/CD (GitHub + Docker local)
 
-> Plan de origen: `specs/TEC-05-calidad-pruebas-ci/plan.md` · Spec: v0.4 (borrador). Una tarea = una etapa con su verificación y su commit.
+> Plan de origen: `specs/TEC-05-calidad-pruebas-ci/plan.md` · Spec: v0.5 (aprobada). Una tarea = una etapa con su verificación y su commit.
 
 ## Resumen
 
 | ID | Tarea | Min | CA cubiertos | Estado |
 |---|---|---|---|---|
-| T0 | Aprobar spec y plan; rama `feature/u6-taller-6`; fila en `specs/README.md` | 5 | CA-01 | pendiente |
+| T0 | Aprobar spec y plan; rama `feature/u6-taller-6`; fila en `specs/README.md` | 5 | CA-01 | hecha |
 | T1 | Etapa 1 · Normalizar H1 (`>=`): código, 13 casos del CSV y documento | 15 | CA-03 | pendiente |
 | T2 | Etapa 2 · 5 tests de borde y 2 de umbral de `CalculoTotales`, cada uno roto a mano | 20 | CA-02 | pendiente |
 | T3 | Etapa 3b · `ci.yml` y `claude.yml`; Claudio sube, instala la App y crea el secreto | 15 | CA-10, CA-11 | pendiente |
@@ -15,7 +15,7 @@
 | T6 | Cierre · registro completo y comprobaciones finales | 5 | CA-08, CA-09 | pendiente |
 
 ## T0 — Aprobar y abrir la rama
-- **Hecho cuando:** spec y plan en «aprobada/aprobado», D-07 a D-10 resueltas, `git branch --show-current` → `feature/u6-taller-6` y `dotnet test` → 143 en verde.
+- **Hecho cuando:** spec y plan en «aprobada/aprobado», D-07 a D-10 resueltas (v0.5), `git branch --show-current` → `feature/u6-taller-6` y `dotnet test` → 143 en verde.
 - **Commit:** `docs(u6): planificación y aprobación de TEC-05 (calidad, pruebas y CI)`
 
 ## T1 — Etapa 1 · Normalizar H1
@@ -32,8 +32,8 @@
 - **Commit:** `test(u6): tests de borde y de umbral de CalculoTotales revisados a mano (T2)`
 
 ## T3 — Etapa 3b · Pipeline en GitHub
-- **Archivos:** `.github/workflows/ci.yml`, `.github/workflows/claude.yml`.
-- **Qué hacer:** Claude explica cada bloque y escribe los dos archivos; Claudio sube el código al repo, instala la App, ejecuta `claude setup-token` y crea el secreto; luego comprueba el verde de `ci.yml`.
+- **Archivos:** `.github/workflows/ci.yml`, `.github/workflows/claude.yml` (en la **raíz del repo**, no en `pedidos-web`).
+- **Qué hacer:** Claude explica cada bloque y escribe los dos archivos; Claudio sube el código al repo, mergea los dos workflows a `main` (`claude.yml` solo responde desde ahí), instala la App, ejecuta `claude setup-token` y crea el secreto; luego comprueba el verde de `ci.yml`.
 - **Verificación:** `contents: read`, timeout, versiones fijas, token solo como secreto; `git grep -n -iE "oauth|token"` solo con el nombre del secreto; `ci.yml` en verde en Actions.
 - **Commit:** `ci(u6): ci.yml y claude.yml con permisos mínimos (T3)`
 

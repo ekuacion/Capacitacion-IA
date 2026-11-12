@@ -1,12 +1,13 @@
 # Spec: TEC-05 · Calidad, pruebas y CI/CD local con Docker
 
-> Versión: 0.4 · Estado: **borrador** (pendiente de aprobación de Claudio Ortiz Castillo; regla 1 de `AGENTS.md`)
+> Versión: 0.5 · Estado: **aprobada** (Claudio Ortiz Castillo, 2026-11-12; regla 1 de `AGENTS.md`)
 > Intent de origen: `specs/TEC-05-calidad-pruebas-ci/intent.md` · Autor del borrador: Claude Code
 > Cambio v0.2: el pipeline local en Docker (idea del profesor). Cambio v0.4 (2026-11-12): Claudio recibió autorización para usar GitHub y ya creó el repo,
 > así que **vuelven `ci.yml`, `claude.yml` y el PR con `@claude`** (como pide la guía) y el Docker local se conserva como segunda compuerta y despliegue.
+> Cambio v0.5 (2026-11-12): el repo es `ekuacion/Capacitacion-IA`, **privado**, y `pedidos-web` es la subcarpeta `unidad-6/taller/pedidos-web` (no la raíz): los workflows van en `.github/workflows/` de la raíz del repo.
 > Claude no hace push ni merge: los hace Claudio. El token nunca va en un archivo.
 
-> Las decisiones marcadas con **[Decidir]** son tuyas. Nada de esto se implementa hasta que apruebes la spec.
+> Las decisiones marcadas con **[Decidir]** eran tuyas; quedaron resueltas (ver más abajo).
 
 ## Qué se entrega
 
@@ -17,14 +18,14 @@
 | `migracion/golden-master.csv` | 1 | Solo cambian los 13 casos afectados por H1 (ver tabla) |
 | `docs/migracion/defectos-corregidos.md` | 1 | H1 pasa de «hallazgo» a «corregido», con casos antes y después |
 | `tests/PedidosWeb.Core.Tests/Totales/CalculoTotalesBordeTests.cs` | 2 | 5 tests de borde + 2 de umbral (H1), cada uno probado rompiendo el código a mano |
-| `.github/workflows/ci.yml` | 3b | Build y test en push y PR; permisos mínimos, timeout 10 min, versiones fijas |
-| `.github/workflows/claude.yml` | 3b | `@claude` en issues y PR; secreto, 5 turnos, sin edición |
+| `.github/workflows/ci.yml` (raíz del repo) | 3b | Build y test en push y PR; solo si cambia `unidad-6/taller/pedidos-web/**`; `working-directory` en esa carpeta; permisos mínimos, timeout 10 min, versiones fijas |
+| `.github/workflows/claude.yml` (raíz del repo) | 3b | `@claude` en issues y PR; secreto, 5 turnos, sin edición |
 | `Dockerfile` | 3 | Multietapa: `restore/build` → `test` (la imagen no se construye si hay un test rojo) → `final` (la API) |
 | `.dockerignore` | 2 | Deja fuera `bin/`, `obj/`, `.git/`, `legado/` y `.claude/` |
 | `scripts/ci-local.ps1` | 2 | Compuerta local: build y test en contenedor; si pasa, construye y despliega la API; si falla, guarda el log en `ci-local.log` (ignorado por git) |
 | `specs/README.md` | 0 | Fila de TEC-05 |
 
-Todos los archivos nuevos van en la raíz de `pedidos-web` (los que no son de `src/`, `tests/`, `specs/` o `docs/` están autorizados por esta spec; regla 9).
+Los archivos nuevos van en la raíz de `pedidos-web`, salvo los dos workflows, que van en `.github/workflows/` de la **raíz del repo** (`d:\GitHub\Capacitacion-IA`), porque GitHub solo lee workflows ahí. Los que no son de `src/`, `tests/`, `specs/` o `docs/` están autorizados por esta spec (regla 9).
 
 ## Estado de partida (comprobado)
 
@@ -88,10 +89,12 @@ Reglas de la etapa: un test = un caso; nombres `Metodo_Escenario_Resultado`; val
 
 Se hace **antes** del Docker, porque el verde en Actions se ve solo después de que Claudio suba el código.
 
-- **`.github/workflows/ci.yml`:** disparadores `push` y `pull_request`; `permissions: contents: read`; `timeout-minutes: 10`; versiones fijas (`runs-on: ubuntu-24.04`, `actions/checkout` y `actions/setup-dotnet` con versión exacta, SDK .NET 10); pasos `dotnet restore`, `dotnet build --no-restore -c Release`, `dotnet test --no-build -c Release`. Cero secretos.
+- **`.github/workflows/ci.yml`:** disparadores `push` y `pull_request` filtrados con `paths: unidad-6/taller/pedidos-web/**` (el repo tiene las 8 unidades) y `defaults.run.working-directory: unidad-6/taller/pedidos-web`; `permissions: contents: read`; `timeout-minutes: 10`; versiones fijas (`runs-on: ubuntu-24.04`, `actions/checkout` y `actions/setup-dotnet` con versión exacta, SDK .NET 10); pasos `dotnet restore`, `dotnet build --no-restore -c Release`, `dotnet test --no-build -c Release`. Cero secretos.
 - **`.github/workflows/claude.yml`:** modo interactivo (`@claude` en issues y PR), basado en el ejemplo oficial; si falla, se usa `unidad-6/taller/u6-respaldo/.github/workflows/claude.yml`. Usa `${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}`, `--max-turns 5`, `timeout-minutes: 10`, `concurrency`, sin herramientas de edición.
 - **Secretos (los configura Claudio; Claude no los toca ni los ve):** (1) instalar la [Claude GitHub App](https://github.com/apps/claude) solo en su repo; (2) `claude setup-token` en su terminal; (3) *Settings › Secrets and variables › Actions › New repository secret* con el nombre `CLAUDE_CODE_OAUTH_TOKEN`.
 - **Push y merge:** los hace Claudio. Claude deja commits locales y le indica el comando.
+- **Orden hacia `main`:** `claude.yml` solo responde si está en la rama por defecto (`main`). Claudio mergea primero `ci.yml` y `claude.yml` a `main`; recién después abre el PR de la falla (etapa 4).
+- **Repo privado:** Actions consume los minutos del plan de Claudio (el build y test dura pocos minutos).
 - **Rama protegida (recomendado, lo hace Claudio):** exigir el job de `ci.yml` en verde para mergear a `main`.
 
 ## Etapa 4 · La falla
@@ -105,16 +108,15 @@ Se hace **antes** del Docker, porque el verde en Actions se ve solo después de 
 
 ## Decisiones que necesito **[Decidir]**
 
-- **D-07 · Repo en GitHub:** dame la URL del repo que creaste y confirma que es **público** (los runners estándar son gratis solo en repos públicos) y si está vacío.
-- **D-08 · Cómo llega el código al repo:** `pedidos-web` es hoy una subcarpeta del repo local de material, sin remoto. Propongo, como en la guía, que el repo de GitHub tenga **`pedidos-web` como raíz** (`.github/workflows/` queda en esa raíz). Dos formas: (a) clonas tu repo vacío y copias dentro el contenido de `pedidos-web` (sin `bin/` ni `obj/`), o (b) conservamos la historia de esta carpeta con `git subtree split` y la subes. Tú haces el push en ambos casos.
-- **D-09 · Push:** la autorización de usar GitHub, ¿incluye que Claude haga `git push` a ese repo o lo sigues haciendo tú? Por defecto, lo haces tú.
-- **D-10 · Versiones fijas:** tags exactos (`actions/checkout@v4.x.y`, más legibles) o SHA de commit (más estricto). Por defecto, tags exactos.
+- **D-07 · Repo en GitHub:** `https://github.com/ekuacion/Capacitacion-IA`, **privado**. **Resuelto.**
+- **D-08 · Cómo llega el código:** `pedidos-web` es la subcarpeta `unidad-6/taller/pedidos-web` del repo ya subido por Claudio; no se usa `git subtree split`. **Resuelto.**
+- **D-09 · Push:** lo hace Claudio. **Resuelto.**
+- **D-10 · Versiones fijas:** tags exactos, verificados contra GitHub al escribir los workflows (T3) y mostrados a Claudio para confirmar. **Resuelto.**
 
 - **D-01 · Módulo de la etapa 1:** `CalculoTotales`. **Decidido por Claudio.**
 - **D-02 · Puerto del host:** `5080`. **Aprobado por Claudio.**
 - **D-03 · Script:** solo `ci-local.ps1` (PowerShell). **Aprobado por Claudio.**
-- **D-04 · Registro:** el `registro-u6.md` tiene campos de GitHub. Propongo reemplazarlos por «resultado de `ci-local.ps1`» y «log del diagnóstico». ¿Lo apruebas?
-- **D-04 · Registro:** con GitHub de vuelta se **mantienen** los campos originales (run de Actions, PR, `claude.yml` en `main`, diagnóstico de `@claude`) y se **suman** «resultado de `ci-local.ps1`» y «log local». *(Cambia respecto de v0.3.)*
+- **D-04 · Registro:** con GitHub de vuelta se **mantienen** los campos originales (run de Actions, PR, `claude.yml` en `main`, diagnóstico de `@claude`) y se **suman** «resultado de `ci-local.ps1`» y «log local». **Aprobado por Claudio.**
 - **D-05 · H1:** se corrige dentro de TEC-05 (etapa 1) a la regla del grabado `>=`, con el C# como único cambio de código. **Decidido por Claudio.**
 - **D-06 · Falla de la etapa 4:** opción 1, la tasa de IVA en `Calcular` (p. ej. `* tasaIva` por `* 0.18m`), rota a mano por Claudio en Rider. B5 se prueba con el redondeo. **Aprobado por Claudio.**
 

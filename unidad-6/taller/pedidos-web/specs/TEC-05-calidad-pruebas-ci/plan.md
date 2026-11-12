@@ -1,6 +1,6 @@
 # Plan: TEC-05 · Calidad, pruebas y CI/CD local con Docker
 
-> Spec de origen: `specs/TEC-05-calidad-pruebas-ci/spec.md` v0.2 · Autor: Claude Code · Estado: **borrador**
+> Spec de origen: `specs/TEC-05-calidad-pruebas-ci/spec.md` v0.5 · Autor: Claude Code · Estado: **aprobado** (Claudio, 2026-11-12)
 
 ## Enfoque
 
@@ -36,8 +36,9 @@ no hay secretos y no se instala nada. La compuerta es el propio `docker build --
 
 | Riesgo | Mitigación |
 |---|---|
-| `pedidos-web` no es la raíz del repo de GitHub | D-08: el repo tiene `pedidos-web` como raíz (copia o `git subtree split`) |
-| El repo es privado o no está vacío | D-07: confirmar antes de T3; los runners gratis exigen repo público |
+| `pedidos-web` no es la raíz del repo de GitHub | Resuelto (v0.5): workflows en la raíz del repo con `working-directory` y `paths` hacia `unidad-6/taller/pedidos-web` |
+| Repo privado: Actions gasta minutos del plan | Un solo job corto (timeout 10 min) y `paths` para no correr con cambios de otras unidades |
+| `claude.yml` no está en `main` y `@claude` no responde | Mergear `ci.yml` y `claude.yml` a `main` antes del PR de la falla |
 | `@claude` no responde (App, `claude.yml` en `main`, nombre del secreto) | Revisar los tres; si sigue, `u6-respaldo/` y diagnóstico local |
 | Token pegado en un archivo | Generar otro; `git grep` antes de cada commit (CA-11) |
 | Cuota de Claude Pro | `--max-turns 5`; un solo `@claude` en la etapa 4 |
