@@ -54,11 +54,11 @@ public static class CalculoTotales
             .Where(l => !string.Equals(l.Categoria.Trim(), CategoriaOferta, StringComparison.OrdinalIgnoreCase))
             .Sum(l => l.Cantidad * l.PrecioUnitario);
 
-    /// <summary>Versión de pantalla del legado: umbrales estrictos (&gt;). El grabado usa &gt;= (hallazgo H1).</summary>
+    /// <summary>Regla del grabado del legado: umbrales con &gt;= (H1 corregido en TEC-05, decisión del PO).</summary>
     private static decimal PorcentajeVolumen(decimal baseDescuento) => baseDescuento switch
     {
-        > UmbralDescuentoAlto => 0.08m,
-        > UmbralDescuentoMedio => 0.05m,
+        >= UmbralDescuentoAlto => 0.08m,
+        >= UmbralDescuentoMedio => 0.05m,
         _ => 0m,
     };
 
