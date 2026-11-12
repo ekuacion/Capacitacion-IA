@@ -3,7 +3,7 @@
 | Campo | Valor |
 |---|---|
 | Estado | aprobada |
-| Versión | 1.0 |
+| Versión | 1.1 |
 | Fecha | 2026-11-12 |
 | Autor(es) | Claudio Ortiz Castillo (PO) con Claude Code |
 | Intent de origen | `specs/TEC-06-code-review-colaboracion/intent.md` |
@@ -27,6 +27,7 @@ Como integrante del equipo de desarrollo, quiero que cada PR se revise con regla
 - **RN-05:** Cada hallazgo de la IA recibe «Acepto», «Discutir» o «Descarto» con argumento propio; el PR tiene al menos 1 hallazgo humano que no es de estilo.
 - **RN-06:** El merge se hace con el CI en verde.
 - **RN-07 (HU-03; decisión del PO, 2026-11-12):** `FiltroPedidos.EntreFechas(pedidos, desde, hasta)` en `src/PedidosWeb.Core/Pedidos/`; límites inclusivos; `desde > hasta` lanza `ArgumentException`; `pedidos` nulo lanza `ArgumentNullException`; devuelve `IReadOnlyList<Pedido>` en el orden recibido. (Nulo y orden no están en la spec de HU-03: los decidió el PO.)
+- **RN-09 (HU-03; decisión del PO, 2026-11-12, tras la revisión local):** si `pedidos` contiene un elemento nulo, `EntreFechas` lanza `ArgumentException` con mensaje claro (dato inválido: falla rápido, no se ignora). Se agrega también un test de borde para `desde == hasta` (un solo día, sin criterio numerado).
 - **RN-08:** `.github/pull_request_template.md` pide Contexto, Qué cambia, Por qué, Cómo probarlo y una casilla «Corrí el revisor antes de pedir revisión». El pedido a Claude para crearla lo redacta Claudio.
 
 ## 4. Criterios de aceptación
@@ -50,7 +51,7 @@ Como integrante del equipo de desarrollo, quiero que cada PR se revise con regla
 - **Dado** el PR de HU-03, **cuando** se abre, **entonces** `REVIEW.md` y `claude-review.yml` ya están en `main` y el CI sigue en verde.
 
 **CA-07 — HU-03 implementada con tests**
-- **Dado** `desde = 2026-03-01` y `hasta = 2026-03-31`, **cuando** se filtra, **entonces**: aparece el pedido del 03-01 (HU-03/CA-01), aparece el del 03-31 (HU-03/CA-02), no aparecen los del 02-28 ni 04-01 (HU-03/CA-03), `desde > hasta` lanza `ArgumentException` con mensaje claro (HU-03/CA-04), `pedidos` nulo lanza `ArgumentNullException` y se conserva el orden de entrada (RN-07). Un test por criterio y `dotnet test` en verde.
+- **Dado** `desde = 2026-03-01` y `hasta = 2026-03-31`, **cuando** se filtra, **entonces**: aparece el pedido del 03-01 (HU-03/CA-01), aparece el del 03-31 (HU-03/CA-02), no aparecen los del 02-28 ni 04-01 (HU-03/CA-03), `desde > hasta` lanza `ArgumentException` con mensaje claro (HU-03/CA-04), `pedidos` nulo lanza `ArgumentNullException` y se conserva el orden de entrada (RN-07); un elemento nulo en `pedidos` lanza `ArgumentException` (RN-09). Un test por criterio y `dotnet test` en verde.
 
 **CA-08 — Descripción de PR**
 - **Dado** el PR de HU-03, **cuando** se abre, **entonces** su descripción tiene Qué cambia, Por qué (escrito por Claudio) y Cómo probarlo, sin `[COMPLETAR]`, y el revisor local se corrió antes.
@@ -109,3 +110,4 @@ Abierta: ninguna.
 |---|---|---|
 | 0.1 | 2026-11-12 | Borrador |
 | 1.0 | 2026-11-12 | Aprobada por el PO; base `main`, decisiones de la sección 8 cerradas |
+| 1.1 | 2026-11-12 | RN-09: elemento nulo en `pedidos` lanza `ArgumentException`; test de borde `desde == hasta` (revisión local de HU-03) |

@@ -53,6 +53,36 @@ public class FiltroPedidosTests
 
         Assert.Contains("desde", ex.Message);
         Assert.Contains("hasta", ex.Message);
+        Assert.Contains("2026-03-31", ex.Message);
+        Assert.Contains("2026-03-01", ex.Message);
+    }
+
+    [Fact]
+    public void EntreFechas_DesdeIgualAHasta_SoloDevuelveEseDia()
+    {
+        // Borde (ejemplo «un día» de la sección 5 de TEC-06; no es un criterio numerado)
+        var dia = new DateOnly(2026, 3, 15);
+        var pedidos = new[]
+        {
+            PedidoDelDia(9, new DateOnly(2026, 3, 14)),
+            PedidoDelDia(10, dia),
+            PedidoDelDia(11, new DateOnly(2026, 3, 16)),
+        };
+
+        var resultado = FiltroPedidos.EntreFechas(pedidos, dia, dia);
+
+        Assert.Equal(new[] { 10 }, resultado.Select(p => p.Id));
+    }
+
+    [Fact]
+    public void EntreFechas_ColeccionConElementoNulo_LanzaArgumentException()
+    {
+        // RN-09 de TEC-06 (decisión del PO)
+        var pedidos = new Pedido?[] { PedidoDelDia(12, Desde), null };
+
+        var ex = Assert.Throws<ArgumentException>(() => FiltroPedidos.EntreFechas(pedidos!, Desde, Hasta));
+
+        Assert.Contains("nulos", ex.Message);
     }
 
     [Fact]
