@@ -1,0 +1,35 @@
+# Claude en CI · modo interactivo: responde a @claude en issues y pull requests.
+# Basado en el ejemplo oficial «Respond to @claude mentions» (code.claude.com/docs/en/github-actions).
+# Requiere: la Claude GitHub App instalada en el repo y el secreto CLAUDE_CODE_OAUTH_TOKEN
+# (se genera con `claude setup-token`). El token NUNCA va en este archivo.
+# Solo funciona desde la rama por defecto (main). Claude diagnostica; una persona corrige y hace el merge.
+name: Claude
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+concurrency:
+  group: claude-${{ github.event.issue.number || github.event.pull_request.number }}
+
+jobs:
+  claude:
+    if: contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read          # solo lectura: Claude no edita ni sube código
+      pull-requests: write    # para comentar en el PR
+      issues: write
+      id-token: write
+      actions: read           # para leer el log del job que falló
+    steps:
+      - uses: actions/checkout@v7.0.1                    # 3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 1
+      - uses: anthropics/claude-code-action@v1.0.271     # 9008224dd4f743876f528e6ba0f0d611f076a7f9
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          claude_args: '--max-turns 5 --disallowedTools "Edit,Write"'
