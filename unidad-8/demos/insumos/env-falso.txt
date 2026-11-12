@@ -1,0 +1,2 @@
+DB_PASSWORD=falsa-no-usar-123
+API_KEY=sk-falsa-000000

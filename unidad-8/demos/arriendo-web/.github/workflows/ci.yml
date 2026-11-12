@@ -1,0 +1,20 @@
+# CI de arriendo-web · build y test en cada push a main y en cada PR.
+# Estado final de la demo 3 de la Unidad 6. Permisos mínimos, timeout y versiones fijas.
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - run: dotnet build --nologo
+      - run: dotnet test --nologo --no-build
