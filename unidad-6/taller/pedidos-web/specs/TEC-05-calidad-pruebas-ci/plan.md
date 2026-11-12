@@ -1,6 +1,6 @@
 # Plan: TEC-05 · Calidad, pruebas y CI/CD local con Docker
 
-> Spec de origen: `specs/TEC-05-calidad-pruebas-ci/spec.md` v0.5 · Autor: Claude Code · Estado: **aprobado** (Claudio, 2026-11-12)
+> Spec de origen: `specs/TEC-05-calidad-pruebas-ci/spec.md` v0.5 · Autor: Claude Code · Estado: **ejecutado parcialmente** (T5 no se hizo; ver `docs/calidad/registro-u6.md`)
 
 ## Enfoque
 

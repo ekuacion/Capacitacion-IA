@@ -1,6 +1,6 @@
 # Spec: TEC-05 · Calidad, pruebas y CI/CD local con Docker
 
-> Versión: 0.5 · Estado: **aprobada** (Claudio Ortiz Castillo, 2026-11-12; regla 1 de `AGENTS.md`)
+> Versión: 0.5 · Estado: **implementada parcialmente** (aprobada por Claudio Ortiz Castillo, 2026-11-12; regla 1 de `AGENTS.md`). Sin verificar: CA-02, CA-05, CA-07 y el verde de `ci.yml` (ver `docs/calidad/registro-u6.md`)
 > Intent de origen: `specs/TEC-05-calidad-pruebas-ci/intent.md` · Autor del borrador: Claude Code
 > Cambio v0.2: el pipeline local en Docker (idea del profesor). Cambio v0.4 (2026-11-12): Claudio recibió autorización para usar GitHub y ya creó el repo,
 > así que **vuelven `ci.yml`, `claude.yml` y el PR con `@claude`** (como pide la guía) y el Docker local se conserva como segunda compuerta y despliegue.

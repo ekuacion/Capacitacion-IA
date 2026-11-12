@@ -1,18 +1,18 @@
 # Tasks: TEC-05 · Calidad, pruebas y CI/CD (GitHub + Docker local)
 
-> Plan de origen: `specs/TEC-05-calidad-pruebas-ci/plan.md` · Spec: v0.5 (aprobada). Una tarea = una etapa con su verificación y su commit.
+> Plan de origen: `specs/TEC-05-calidad-pruebas-ci/plan.md` · Spec: v0.5 (implementada parcialmente). Una tarea = una etapa con su verificación y su commit.
 
 ## Resumen
 
 | ID | Tarea | Min | CA cubiertos | Estado |
 |---|---|---|---|---|
 | T0 | Aprobar spec y plan; rama `feature/u6-taller-6`; fila en `specs/README.md` | 5 | CA-01 | hecha |
-| T1 | Etapa 1 · Normalizar H1 (`>=`): código, 13 casos del CSV y documento | 15 | CA-03 | pendiente |
-| T2 | Etapa 2 · 5 tests de borde y 2 de umbral de `CalculoTotales`, cada uno roto a mano | 20 | CA-02 | pendiente |
-| T3 | Etapa 3b · `ci.yml` y `claude.yml`; Claudio sube, instala la App y crea el secreto | 15 | CA-10, CA-11 | pendiente |
-| T4 | Etapa 3 · `Dockerfile`, `.dockerignore` y `scripts/ci-local.ps1`; API desplegada en Docker | 15 | CA-04, CA-05, CA-06 | pendiente |
-| T5 | Etapa 4 · Falla a mano (IVA), PR, `@claude`, corrección y merge (Claudio) | 20 | CA-07 | pendiente |
-| T6 | Cierre · registro completo y comprobaciones finales | 5 | CA-08, CA-09 | pendiente |
+| T1 | Etapa 1 · Normalizar H1 (`>=`): código, 13 casos del CSV y documento | 15 | CA-03 | hecha |
+| T2 | Etapa 2 · 5 tests de borde y 2 de umbral de `CalculoTotales`, cada uno roto a mano | 20 | CA-02 | hecha (sin verificar por mutación) |
+| T3 | Etapa 3b · `ci.yml` y `claude.yml`; Claudio sube, instala la App y crea el secreto | 15 | CA-10, CA-11 | hecha (falta el verde en Actions) |
+| T4 | Etapa 3 · `Dockerfile`, `.dockerignore` y `scripts/ci-local.ps1`; API desplegada en Docker | 15 | CA-04, CA-05, CA-06 | hecha (CA-05 sin probar) |
+| T5 | Etapa 4 · Falla a mano (IVA), PR, `@claude`, corrección y merge (Claudio) | 20 | CA-07 | no ejecutada (por tiempo) |
+| T6 | Cierre · registro completo y comprobaciones finales | 5 | CA-08, CA-09 | hecha |
 
 ## T0 — Aprobar y abrir la rama
 - **Hecho cuando:** spec y plan en «aprobada/aprobado», D-07 a D-10 resueltas (v0.5), `git branch --show-current` → `feature/u6-taller-6` y `dotnet test` → 143 en verde.
