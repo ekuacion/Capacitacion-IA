@@ -1,0 +1,48 @@
+# Revisión automática de PR con Claude (taller U7). Comenta; no edita ni sube código.
+# Las reglas (AGENTS.md y REVIEW.md) se leen de la rama BASE (reglas-base/), nunca del PR.
+# Requiere el secreto CLAUDE_CODE_OAUTH_TOKEN (se crea en Settings › Secrets; NUNCA va en este archivo).
+# Corre al abrir, reabrir o marcar listo el PR; no en cada push (cuida la cuota).
+name: Claude Review
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review]
+
+concurrency:
+  group: claude-review-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    # Solo PR del mismo repo (los forks no reciben secretos) y que no sean borrador
+    if: github.event.pull_request.head.repo.full_name == github.repository && !github.event.pull_request.draft
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: write   # para comentar en el PR
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7.0.1                    # 3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          fetch-depth: 0
+      - uses: actions/checkout@v7.0.1                    # reglas desde la rama base
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          path: reglas-base
+      - uses: anthropics/claude-code-action@v1.0.271     # 9008224dd4f743876f528e6ba0f0d611f076a7f9
+        env:
+          GH_TOKEN: ${{ github.token }}
+        with:
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            Revisa el PR ${{ github.repository }}#${{ github.event.pull_request.number }} en español de Chile.
+            1. Lee SOLO desde reglas-base/unidad-7/taller/pedidos-web/ los archivos AGENTS.md y REVIEW.md. Si REVIEW.md no existe ahí, dilo en un comentario y termina.
+            2. Mira el cambio con: git diff ${{ github.event.pull_request.base.sha }} HEAD
+            3. Aplica REVIEW.md: Importante, Nit (máximo 5), no reportar y los 3 chequeos de «Revisar siempre».
+            4. Publica los hallazgos con comentarios en línea y un resumen con: gh pr comment ${{ github.event.pull_request.number }} --body "<resumen>"
+            No edites ni crees archivos.
+          claude_args: >-
+            --max-turns 10
+            --allowedTools "Read,Grep,Glob,Bash(git diff:*),Bash(git log:*),Bash(gh pr comment:*),mcp__github_inline_comment__create_inline_comment"
+            --disallowedTools "Edit,Write"

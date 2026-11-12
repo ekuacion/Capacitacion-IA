@@ -16,3 +16,6 @@ Thumbs.db
 # Secretos: nunca al repo
 .env
 *.pem
+
+# CI local
+ci-local.log

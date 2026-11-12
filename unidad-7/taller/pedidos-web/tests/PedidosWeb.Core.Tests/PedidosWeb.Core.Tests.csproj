@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\..\migracion\golden-master.csv" Link="golden-master.csv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\PedidosWeb.Core\PedidosWeb.Core.csproj" />
   </ItemGroup>
 

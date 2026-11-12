@@ -1,48 +1,42 @@
 namespace PedidosWeb.Core.Clientes;
 
 // Servicio heredado: lo escribió un ex integrante del equipo, con apuro.
-// Funciona y tiene 4 tests. Nadie se ha atrevido a tocarlo.
+// Se ordenó en TEC-01 (nombres claros, búsqueda única, condiciones simples) sin cambiar su comportamiento,
+// que quedó fijado por 14 tests en ClientesServiceTests y ClientesServiceCaracterizacionTests.
 public class ClientesService
 {
-    private readonly List<Cliente> _l;
+    private readonly List<Cliente> _clientes;
 
     public ClientesService() : this(ClientesDeEjemplo.Crear()) { }
 
-    public ClientesService(List<Cliente> l)
+    public ClientesService(List<Cliente> clientes)
     {
-        _l = l;
+        _clientes = clientes;
     }
 
     // ficha del cliente para la pantalla
-    public string proc2(string id)
+    public string ObtenerFicha(string id)
     {
-        Cliente? c = null;
-        for (int i = 0; i < _l.Count; i++)
+        var cliente = BuscarPorId(id);
+        if (cliente == null) return "";
+        string rut = cliente.Rut.Replace(".", "").Replace(" ", "").ToUpper();
+        string zona = cliente.Region switch
         {
-            if (_l[i].Id == id) { c = _l[i]; break; }
-        }
-        if (c == null) return "";
-        string r = c.Rut.Replace(".", "").Replace(" ", "").ToUpper();
-        string t = "";
-        if (c.Region == "RM") t = "Zona centro";
-        else if (c.Region == "V") t = "Zona centro";
-        else if (c.Region == "VIII") t = "Zona sur";
-        else if (c.Region == "II") t = "Zona norte";
-        else t = "Sin zona";
-        string e = "";
-        if (c.Activo == true) e = "Activo"; else e = "Inactivo";
-        return c.Nombre + " | " + r + " | " + t + " | " + e;
+            "RM" or "V" => "Zona centro",
+            "VIII" => "Zona sur",
+            "II" => "Zona norte",
+            _ => "Sin zona",
+        };
+        string estado = cliente.Activo ? "Activo" : "Inactivo";
+        return cliente.Nombre + " | " + rut + " | " + zona + " | " + estado;
     }
 
     // si existe y está activo
-    public bool proc3(string id)
+    public bool ExisteYEstaActivo(string id)
     {
-        Cliente? c = null;
-        for (int i = 0; i < _l.Count; i++)
-        {
-            if (_l[i].Id == id) { c = _l[i]; break; }
-        }
-        if (c == null) return false;
-        if (c.Activo == true) return true; else return false;
+        return BuscarPorId(id) is { Activo: true };
     }
+
+    // el primer cliente con ese id (se compara exacto), o null si no hay
+    private Cliente? BuscarPorId(string id) => _clientes.FirstOrDefault(cliente => cliente.Id == id);
 }

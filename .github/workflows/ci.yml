@@ -1,15 +1,15 @@
-# CI de Pedidos Web (taller U6): build y test en cada push y pull request.
-# Permisos mínimos, sin secretos. El proyecto vive en una subcarpeta del repo.
+# CI de Pedidos Web (taller U7): build y test en cada push y pull request.
+# Permisos mínimos, sin secretos. El proyecto vive en una subcarpeta del repo (desde la U7, unidad-7).
 name: CI
 
 on:
   push:
     paths:
-      - 'unidad-6/taller/pedidos-web/**'
+      - 'unidad-7/taller/pedidos-web/**'
       - '.github/workflows/ci.yml'
   pull_request:
     paths:
-      - 'unidad-6/taller/pedidos-web/**'
+      - 'unidad-7/taller/pedidos-web/**'
       - '.github/workflows/ci.yml'
 
 permissions:
@@ -21,7 +21,7 @@ jobs:
     timeout-minutes: 10
     defaults:
       run:
-        working-directory: unidad-6/taller/pedidos-web
+        working-directory: unidad-7/taller/pedidos-web
     steps:
       # Versiones fijas por tag exacto (SHA entre paréntesis, por si se quiere fijar por SHA)
       - uses: actions/checkout@v7.0.1          # 3d3c42e5aac5ba805825da76410c181273ba90b1
